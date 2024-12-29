@@ -6,17 +6,24 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 import joblib
 
-def load_and_prepare_data():
-    # Load the data
-    data = pd.read_csv('data.csv')
-
-    # Define the features 
-    # TODO adjust these features
+def load_and_prepare_data(stat_type):
+    # Load player data
+    df = pd.read_csv(f'data/player_{stat_type}.csv')
+    
+    # Features for player prediction
     features = [
-        'home_team_rank',
-        'away_team_rank',
-        'home_team_goals_scored_avg',
-        'away_team_goals_scored_avg',
-        'home_team_goals_conceded_avg',
-        'away_team_goals_conceded_avg'
+        'minutes_played_last_5',
+        'average_' + stat_type + '_last_5',
+        'home_or_away',  # 1 for home, 0 for away
+        'opponent_rank',
+        'days_rest',
+        'player_form_rating',
+        'team_goals_last_5',
+        'opponent_goals_allowed_last_5'
     ]
+    
+    X = df[features]
+    y = df[stat_type + '_actual'] # the actual result for the stat
+    
+    return X, y
+
